@@ -1,1 +1,1 @@
-# inventory-me
+# inventory-me-client
