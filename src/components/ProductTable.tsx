@@ -5,14 +5,16 @@ import { makeStyles } from "@material-ui/styles";
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { useActions } from "../actions";
-import * as ProductActions from "../actions/product";
 import { Product } from "../model";
 import { RootState } from "../reducers";
+import * as ProductActions from "../actions/product";
+import * as AuthenticationActions from "../actions/authentication";
 
 export function ProductTable() {
   const classes = useStyles();
   const productList = useSelector((state: RootState) => state.productList);
   const productActions = useActions(ProductActions);
+  const authenticationActions = useActions(AuthenticationActions);
 
   const onRowClick = (product: Product) => {
     // if (product.completed) {
@@ -20,13 +22,23 @@ export function ProductTable() {
     // } else {
     //   productActions.completeProduct(product.id);
     // }
-    productActions.requestProducts();
+    // productActions.requestProducts();
   };
 
   return (
     <Paper className={classes.paper}>
-      <Button onClick={() => productActions.fetchProducts()}>
-        Fetch Products
+      <Button
+        onClick={() =>
+          authenticationActions.fetchLogin({
+            email: "example@gmail.com",
+            password: "qwer1234",
+          })
+        }
+      >
+        Login
+      </Button>
+      <Button onClick={() => authenticationActions.requestLogout()}>
+        Logout
       </Button>
       <Button onClick={() => productActions.fetchProducts()}>
         Fetch Products

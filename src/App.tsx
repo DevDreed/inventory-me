@@ -1,76 +1,59 @@
 import {
   AppBar,
-  Badge,
-  Divider,
   Drawer as DrawerMui,
   Hidden,
   IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Toolbar,
   Typography,
   useMediaQuery,
 } from "@material-ui/core";
 import { Theme } from "@material-ui/core/styles";
-import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
-import HomeIcon from "@material-ui/icons/Home";
 import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import * as React from "react";
-import { useSelector } from "react-redux";
 import { Route, Router } from "react-router-dom";
 import { history } from "./configureStore";
-import { Product } from "./model";
 import { HomePage, ProductPage } from "./pages";
-import { RootState } from "./reducers/index";
 import { withRoot } from "./withRoot";
+import { PrivateRoute } from "./components/PrivateRoute";
+import { connect } from "react-redux";
+import { AuthenticationState } from "./reducers/authentication";
 
-function Routes() {
+interface Props {
+  authenticationState: AuthenticationState;
+}
+
+function Routes(props: Props) {
   const classes = useStyles();
 
   return (
     <div className={classes.content}>
-      <Route exact={true} path="/" component={HomePage} />
-      <Route exact={true} path="/home" component={HomePage} />
-      <Route exact={true} path="/product" component={ProductPage} />
+      <Route
+        exact={true}
+        path="/"
+        component={() => (
+          <HomePage authenticationState={props.authenticationState} />
+        )}
+      />
+      <Route
+        exact={true}
+        path="/login"
+        component={() => (
+          <HomePage authenticationState={props.authenticationState} />
+        )}
+      />
+      <PrivateRoute
+        exact={true}
+        path="/product"
+        component={ProductPage}
+      />
     </div>
   );
 }
 
-function Drawer(props: { productList: Product[] }) {
-  const classes = useStyles();
-
-  return (
-    <div>
-      <div className={classes.drawerHeader} />
-      <Divider />
-      <List>
-        <ListItem button onClick={() => history.push("/")}>
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListItem button onClick={() => history.push("/product")}>
-          <ListItemIcon>
-            <ProductIcon productList={props.productList} />
-          </ListItemIcon>
-          <ListItemText primary="Product" />
-        </ListItem>
-      </List>
-    </div>
-  );
-}
-
-function App() {
+function App(props: Props) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(true);
-  const productList = useSelector((state: RootState) => state.productList);
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("sm")
   );
@@ -98,6 +81,7 @@ function App() {
               </Typography>
             </Toolbar>
           </AppBar>
+
           <Hidden mdUp>
             <DrawerMui
               variant="temporary"
@@ -110,9 +94,7 @@ function App() {
               ModalProps={{
                 keepMounted: true, // Better open performance on mobile.
               }}
-            >
-              <Drawer productList={productList} />
-            </DrawerMui>
+            ></DrawerMui>
           </Hidden>
           <Hidden smDown>
             <DrawerMui
@@ -121,30 +103,13 @@ function App() {
               classes={{
                 paper: classes.drawerPaper,
               }}
-            >
-              <Drawer productList={productList} />
-            </DrawerMui>
+            ></DrawerMui>
           </Hidden>
-          <Routes />
+          <Routes {...props} />
         </div>
       </div>
     </Router>
   );
-}
-
-function ProductIcon(props: { productList: Product[] }) {
-  let uncompletedProducts = [];
-  // props.productList.filter((t) => t.completed === false);
-
-  if (uncompletedProducts.length > 0) {
-    return (
-      <Badge color="secondary" badgeContent={uncompletedProducts.length}>
-        <FormatListNumberedIcon />
-      </Badge>
-    );
-  } else {
-    return <FormatListNumberedIcon />;
-  }
 }
 
 const drawerWidth = 240;
@@ -194,4 +159,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default withRoot(App);
+export default connect((state: any) => ({
+  authenticationState: state.authenticationState,
+}))(withRoot(App));

@@ -8,14 +8,14 @@ import configureStore from "./configureStore";
 const { persistor, store } = configureStore();
 
 export function ReduxRoot() {
-	return (
-		<Provider store={store}>
-			<PersistGate
-				loading={<Typography>Loading...</Typography>}
-				persistor={persistor}
-			>
-				<App />
-			</PersistGate>
-		</Provider>
-	);
+  return (
+    <Provider store={store}>
+      <PersistGate
+        loading={<Typography>Loading...</Typography>}
+        persistor={persistor}
+      >
+        <App />
+      </PersistGate>
+    </Provider>
+  );
 }

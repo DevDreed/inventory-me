@@ -4,13 +4,24 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { HomeBox } from "../components";
 import { RootState } from "../reducers";
+import { Redirect, Route } from "react-router-dom";
+import { LoginPage } from "./LoginPage";
+import { AuthenticationState } from "../reducers/authentication";
 
-export function HomePage() {
+interface ComponentProps {
+  authenticationState: AuthenticationState;
+}
+
+export function HomePage(props: ComponentProps) {
   const classes = useStyles();
   const [boxColor, setBoxColor] = React.useState("red");
   const productList = useSelector((state: RootState) => state.productList);
 
   const onButtonClick = () => setBoxColor(boxColor === "red" ? "blue" : "red");
+
+  if (props.authenticationState && props.authenticationState.hasSession) {
+    return <Redirect to={"/product"} />;
+  }
 
   return (
     <div className={classes.root}>
@@ -27,6 +38,22 @@ export function HomePage() {
         >
           Change Color
         </Button>
+
+        <div>
+          <Route
+            exact={true}
+            path={["/", "/login"]}
+            render={() => (
+              <LoginPage
+                hasSession={
+                  props.authenticationState
+                    ? props.authenticationState.hasSession
+                    : false
+                }
+              />
+            )}
+          />
+        </div>
       </div>
     </div>
   );
