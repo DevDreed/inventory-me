@@ -1,4 +1,5 @@
 import * as React from "react";
+import FileUpload from "../../components/FileUpload/FileUpload";
 import "./ProductPage.scss";
 
 export function ProductPage() {
@@ -137,11 +138,7 @@ export function ProductPage() {
           <div className="card">
             <h5 className="card-header font-weight-light">Requirements</h5>
             <div className="card-body">
-              <ul>
-                <li>JQuery</li>
-                <li>Bootstrap 4.3</li>
-                <li>FontAwesome</li>
-              </ul>
+              <FileUpload />
             </div>
           </div>
         </div>
