@@ -1,5 +1,6 @@
 import * as React from "react";
 import FileUpload from "../../components/FileUpload/FileUpload";
+import { ProductAddForm } from "../../components/ProductAddForm/ProductAddForm";
 import "./ProductPage.scss";
 
 export function ProductPage() {
@@ -134,11 +135,11 @@ export function ProductPage() {
         </div>
 
         <div className="col p-4">
-          <h1 className="display-4">Collapsing Sidebar Menu</h1>
+          <h1 className="display-4">Create New Product</h1>
           <div className="card">
-            <h5 className="card-header font-weight-light">Requirements</h5>
+            <h5 className="card-header font-weight-light">New Product</h5>
             <div className="card-body">
-              <FileUpload />
+              <ProductAddForm />
             </div>
           </div>
         </div>

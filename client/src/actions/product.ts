@@ -1,6 +1,7 @@
 import { ProductAction, ProductActions, Product } from "../model";
 import { Dispatch } from "react";
 import Cookies from "js-cookie";
+import axios, { AxiosResponse } from "axios";
 
 export function addProduct(product: Product): ProductAction {
   return {
@@ -45,6 +46,22 @@ export function receiveProducts(products: Product[]): ProductAction {
     payload: products,
   };
 }
+
+
+export function requestCreateProduct(formData: any): ProductAction {
+  return {
+    type: ProductActions.REQUEST_CREATE_PRODUCT,
+    payload: formData,
+  };
+}
+
+export function receiveCreateProduct(result: any): ProductAction {
+  return {
+    type: ProductActions.REQUEST_CREATE_PRODUCT,
+    payload: result,
+  };
+}
+
 
 // Meet our first thunk action creator!
 // Though its insides are different, you would use it just like any other action creator:
@@ -92,5 +109,35 @@ export function fetchProducts() {
 
         dispatch(receiveProducts(json))
       );
+  };
+}
+
+export function createProduct(formDetails: any) {
+  // Thunk middleware knows how to handle functions.
+  // It passes the dispatch method as an argument to the function,
+  // thus making it able to dispatch actions itself.
+
+  return async function (dispatch: Dispatch<ProductAction>) {
+    // First dispatch: the app state is updated to inform
+    // that the API call is starting.
+
+    dispatch(requestCreateProduct(formDetails));
+
+    // The function called by the thunk middleware can return a value,
+    // that is passed on as the return value of the dispatch method.
+
+    // In this case, we return a promise to wait for.
+    // This is not required by thunk middleware, but it is convenient for us.
+
+    await axios(`/products`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: Cookies.get("token")
+      },
+      data: JSON.stringify(formDetails),
+    }).then((res: AxiosResponse) => {
+      dispatch(receiveCreateProduct(res.data));
+    });
   };
 }

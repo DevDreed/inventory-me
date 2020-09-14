@@ -2,6 +2,11 @@
 
 # Inventory me
 
+## Getting Started
+cd .. takes you back a level
+- cd client && npm start
+- cd server && npm run dev
+
 ## Tables
 
 - Users

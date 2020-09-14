@@ -23,6 +23,9 @@ export enum ProductActions {
   RECEIVE_PRODUCTS = "RECEIVE_PRODUCTS",
   FAIL_PRODUCTS = "FAIL_PRODUCTS",
   UPDATE_PRODUCT = "UPDATE_PRODUCT",
+  REQUEST_CREATE_PRODUCT = "REQUEST_CREATE_PRODUCT",
+  RECEIVE_CREATE_PRODUCT = "RECEIVE_CREATE_PRODUCT",
+  FAIL_CREATE_PRODUCT = "FAIL_CREATE_PRODUCT",
 }
 
 interface ProductActionType<T, P> {
@@ -35,4 +38,7 @@ export type ProductAction =
   | ProductActionType<typeof ProductActions.REQUEST_PRODUCTS, null>
   | ProductActionType<typeof ProductActions.RECEIVE_PRODUCTS, Product[]>
   | ProductActionType<typeof ProductActions.UPDATE_PRODUCT, number>
-  | ProductActionType<typeof ProductActions.DELETE_PRODUCT, number>;
+  | ProductActionType<typeof ProductActions.DELETE_PRODUCT, number>
+  | ProductActionType<typeof ProductActions.REQUEST_CREATE_PRODUCT, Product>
+  | ProductActionType<typeof ProductActions.RECEIVE_CREATE_PRODUCT, any>
+  | ProductActionType<typeof ProductActions.FAIL_CREATE_PRODUCT, any>;
